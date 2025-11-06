@@ -1,0 +1,652 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #c41e3a;
+    --secondary-color: #1a1a1a;
+    --accent-color: #ffd700;
+    --text-light: #ffffff;
+    --text-dark: #333333;
+    --bg-dark: #0a0a0a;
+    --bg-light: #f5f5f5;
+}
+
+body {
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Hero Section */
+.hero-section {
+    height: 100vh;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #c41e3a 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.03) 2px,
+            rgba(255, 255, 255, 0.03) 4px
+        );
+    animation: scanlines 10s linear infinite;
+}
+
+@keyframes scanlines {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(20px);
+    }
+}
+
+/* Navigation */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    position: relative;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--text-light);
+    letter-spacing: 5px;
+    text-shadow: 0 0 20px rgba(196, 30, 58, 0.8);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 40px;
+}
+
+.nav-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.nav-links a:hover {
+    color: var(--accent-color);
+}
+
+/* Hero Content */
+.hero-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+.hero-title {
+    font-size: 96px;
+    font-weight: bold;
+    color: var(--text-light);
+    letter-spacing: 15px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 30px rgba(196, 30, 58, 0.5);
+    animation: fadeInUp 1s ease;
+}
+
+.hero-subtitle {
+    font-size: 48px;
+    color: var(--accent-color);
+    letter-spacing: 10px;
+    margin-bottom: 20px;
+    animation: fadeInUp 1.2s ease;
+}
+
+.hero-description {
+    font-size: 24px;
+    color: var(--text-light);
+    letter-spacing: 3px;
+    margin-bottom: 40px;
+    animation: fadeInUp 1.4s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cta-button {
+    padding: 18px 50px;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: var(--primary-color);
+    color: var(--text-light);
+    border: 2px solid var(--primary-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: fadeInUp 1.6s ease;
+}
+
+.cta-button:hover {
+    background: transparent;
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: var(--text-light);
+    z-index: 10;
+    animation: bounce 2s infinite;
+}
+
+.scroll-indicator span {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.scroll-arrow {
+    font-size: 24px;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    40% {
+        transform: translateX(-50%) translateY(-10px);
+    }
+    60% {
+        transform: translateX(-50%) translateY(-5px);
+    }
+}
+
+/* History Section */
+.history-section {
+    padding: 100px 0;
+    background: var(--bg-light);
+}
+
+.section-title {
+    font-size: 48px;
+    text-align: center;
+    margin-bottom: 60px;
+    letter-spacing: 5px;
+    color: var(--secondary-color);
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: var(--primary-color);
+}
+
+.history-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+    margin-top: 80px;
+}
+
+.history-text h3 {
+    font-size: 28px;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    margin-top: 30px;
+}
+
+.history-text h3:first-child {
+    margin-top: 0;
+}
+
+.history-text p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+.history-stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 30px;
+    text-align: center;
+    border-left: 4px solid var(--primary-color);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateX(10px);
+}
+
+.stat-card h4 {
+    font-size: 36px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.stat-card p {
+    font-size: 14px;
+    color: var(--text-dark);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Timeline Section */
+.timeline-section {
+    padding: 100px 0;
+    background: var(--secondary-color);
+    color: var(--text-light);
+}
+
+.timeline-section .section-title {
+    color: var(--text-light);
+}
+
+.timeline {
+    position: relative;
+    max-width: 900px;
+    margin: 80px auto 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background: var(--primary-color);
+}
+
+.timeline-item {
+    margin-bottom: 60px;
+    position: relative;
+}
+
+.timeline-item:nth-child(odd) .timeline-content {
+    margin-left: auto;
+    text-align: left;
+    padding-left: 40px;
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+    margin-right: auto;
+    text-align: right;
+    padding-right: 40px;
+}
+
+.timeline-content {
+    width: calc(50% - 30px);
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.timeline-content:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.timeline-marker {
+    position: absolute;
+    left: 50%;
+    top: 30px;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: var(--primary-color);
+    border: 4px solid var(--secondary-color);
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.timeline-item.highlight .timeline-marker {
+    width: 30px;
+    height: 30px;
+    background: var(--accent-color);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+}
+
+.timeline-content h3 {
+    font-size: 24px;
+    color: var(--accent-color);
+    margin-bottom: 10px;
+}
+
+.timeline-content h4 {
+    font-size: 20px;
+    color: var(--text-light);
+    margin-bottom: 15px;
+}
+
+.timeline-content p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Gallery Section */
+.gallery-section {
+    padding: 100px 0;
+    background: var(--bg-light);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 80px;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    cursor: pointer;
+}
+
+.gallery-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.gallery-placeholder span {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.gallery-item:hover .gallery-placeholder {
+    transform: scale(1.1);
+}
+
+/* Legacy Section */
+.legacy-section {
+    padding: 100px 0;
+    background: white;
+}
+
+.legacy-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-top: 80px;
+    margin-bottom: 80px;
+}
+
+.legacy-card {
+    text-align: center;
+    padding: 40px 30px;
+    background: var(--bg-light);
+    transition: all 0.3s ease;
+}
+
+.legacy-card:hover {
+    background: var(--secondary-color);
+    color: var(--text-light);
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.legacy-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.legacy-card h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.legacy-card:hover h3 {
+    color: var(--accent-color);
+}
+
+.legacy-card p {
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.anniversary-message {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px;
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    color: var(--text-light);
+}
+
+.anniversary-message h3 {
+    font-size: 36px;
+    margin-bottom: 30px;
+    color: var(--accent-color);
+}
+
+.anniversary-message p {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+.signature {
+    font-size: 20px;
+    font-style: italic;
+    color: var(--accent-color);
+}
+
+/* Footer */
+.footer {
+    background: var(--bg-dark);
+    color: var(--text-light);
+    padding: 60px 0 20px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-section h4 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--accent-color);
+    letter-spacing: 2px;
+}
+
+.footer-section p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 10px;
+}
+
+.footer-section ul li a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+    color: var(--accent-color);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 48px;
+        letter-spacing: 5px;
+    }
+
+    .hero-subtitle {
+        font-size: 32px;
+    }
+
+    .hero-description {
+        font-size: 18px;
+    }
+
+    .nav-links {
+        gap: 20px;
+    }
+
+    .navbar {
+        padding: 20px;
+    }
+
+    .history-content {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline::before {
+        left: 20px;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content,
+    .timeline-item:nth-child(even) .timeline-content {
+        width: calc(100% - 60px);
+        margin-left: 60px;
+        text-align: left;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .timeline-marker {
+        left: 20px;
+    }
+
+    .section-title {
+        font-size: 32px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .legacy-content {
+        grid-template-columns: 1fr;
+    }
+
+    .anniversary-message {
+        padding: 40px 20px;
+    }
+
+    .anniversary-message h3 {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-links {
+        display: none;
+    }
+
+    .hero-title {
+        font-size: 36px;
+    }
+
+    .hero-subtitle {
+        font-size: 24px;
+    }
+}
