@@ -3,242 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ford Mustang - 50 Years of American Legend</title>
+    <title>Family Genealogy Map</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-    <div class="hero-section">
-        <nav class="navbar">
-            <div class="logo">MUSTANG</div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#history">History</a></li>
-                <li><a href="#timeline">Timeline</a></li>
-                <li><a href="#gallery">Gallery</a></li>
-                <li><a href="#legacy">Legacy</a></li>
-            </ul>
-        </nav>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🌳 Family Genealogy Map</h1>
+            <div class="header-actions">
+                <input type="text" id="searchInput" placeholder="Search family members..." class="search-input">
+                <button id="addRootBtn" class="btn btn-primary">+ Add Root Person</button>
+                <button id="exportBtn" class="btn btn-secondary">Export Data</button>
+                <button id="importBtn" class="btn btn-secondary">Import Data</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+        </div>
+    </header>
 
-        <div class="hero-content">
-            <h1 class="hero-title">50 YEARS OF FREEDOM</h1>
-            <p class="hero-subtitle">1964 - 2014</p>
-            <p class="hero-description">Celebrating Five Decades of American Muscle</p>
-            <button class="cta-button" onclick="document.getElementById('history').scrollIntoView({behavior: 'smooth'})">Explore the Legend</button>
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Tree Visualization -->
+        <div class="tree-container" id="treeContainer">
+            <div class="tree-controls">
+                <button id="zoomIn" class="control-btn" title="Zoom In">+</button>
+                <button id="zoomOut" class="control-btn" title="Zoom Out">−</button>
+                <button id="resetZoom" class="control-btn" title="Reset View">⟲</button>
+                <button id="fitView" class="control-btn" title="Fit to View">⤢</button>
+            </div>
+            <svg id="familyTree"></svg>
+            <div id="emptyState" class="empty-state">
+                <div class="empty-state-content">
+                    <h2>👪 Start Your Family Tree</h2>
+                    <p>Click "Add Root Person" to begin mapping your family's genealogy.</p>
+                    <p>You can add up to 5 generations and track births, deaths, and relationships.</p>
+                </div>
+            </div>
         </div>
 
-        <div class="scroll-indicator">
-            <span>Scroll to explore</span>
-            <div class="scroll-arrow">&#8595;</div>
+        <!-- Side Panel for Editing -->
+        <div class="side-panel" id="sidePanel">
+            <div class="panel-header">
+                <h2 id="panelTitle">Add Family Member</h2>
+                <button id="closePanel" class="close-btn">×</button>
+            </div>
+
+            <div class="panel-content">
+                <form id="memberForm">
+                    <input type="hidden" id="memberId">
+
+                    <div class="form-section">
+                        <h3>Personal Information</h3>
+
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gender">Gender *</label>
+                            <select id="gender" required>
+                                <option value="">Select...</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="birthDate">Birth Date</label>
+                                <input type="date" id="birthDate">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="deathDate">Death Date</label>
+                                <input type="date" id="deathDate">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="photo">Photo URL</label>
+                            <input type="url" id="photo" placeholder="https://example.com/photo.jpg">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bio">Biography</label>
+                            <textarea id="bio" rows="3" placeholder="Tell us about this person..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Additional Notes</label>
+                            <textarea id="notes" rows="2" placeholder="Any additional information..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section" id="relationshipsSection">
+                        <h3>Relationships</h3>
+
+                        <div class="form-group">
+                            <label for="mother">Mother</label>
+                            <select id="mother">
+                                <option value="">Select mother...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="father">Father</label>
+                            <select id="father">
+                                <option value="">Select father...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="spouse">Spouse</label>
+                            <select id="spouse">
+                                <option value="">Select spouse...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Children</label>
+                            <div id="childrenList" class="children-list">
+                                <!-- Children will be listed here -->
+                            </div>
+                            <button type="button" id="addChildBtn" class="btn btn-secondary btn-small">+ Add Child</button>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" id="deleteBtn" class="btn btn-danger" style="display: none;">Delete</button>
+                        <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
-    <section id="history" class="history-section">
-        <div class="container">
-            <h2 class="section-title">THE BIRTH OF AN ICON</h2>
-            <div class="history-content">
-                <div class="history-text">
-                    <h3>April 17, 1964</h3>
-                    <p>On a spring day that would change automotive history forever, Ford introduced the Mustang at the New York World's Fair. The vision of Lee Iacocca and his team, the Mustang was designed to be affordable, stylish, and fun to drive.</p>
-
-                    <h3>The Pony Car Revolution</h3>
-                    <p>The Mustang created an entirely new segment of automobiles known as "pony cars" - affordable, compact, highly styled cars with a sporty or performance-oriented image. It was an instant success, selling over 22,000 units on its first day and over one million in its first 18 months.</p>
-
-                    <h3>Cultural Impact</h3>
-                    <p>More than just a car, the Mustang became a symbol of American freedom, youth, and independence. It appeared in countless movies, became a favorite of celebrities, and captured the imagination of generations of drivers.</p>
+    <!-- Person Detail Modal -->
+    <div id="personModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalName"></h2>
+                <button id="closeModal" class="close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="person-photo">
+                    <img id="modalPhoto" src="" alt="">
                 </div>
-                <div class="history-stats">
-                    <div class="stat-card">
-                        <h4>22,000+</h4>
-                        <p>Units sold on Day 1</p>
+                <div class="person-details">
+                    <div class="detail-row">
+                        <strong>Birth:</strong> <span id="modalBirth"></span>
                     </div>
-                    <div class="stat-card">
-                        <h4>1 Million</h4>
-                        <p>Sales in 18 months</p>
+                    <div class="detail-row">
+                        <strong>Death:</strong> <span id="modalDeath"></span>
                     </div>
-                    <div class="stat-card">
-                        <h4>50 Years</h4>
-                        <p>Of continuous production</p>
+                    <div class="detail-row">
+                        <strong>Age:</strong> <span id="modalAge"></span>
                     </div>
-                    <div class="stat-card">
-                        <h4>10 Million+</h4>
-                        <p>Total units sold</p>
+                    <div class="detail-row" id="modalBioRow">
+                        <strong>Biography:</strong>
+                        <p id="modalBio"></p>
                     </div>
+                    <div class="detail-row" id="modalNotesRow">
+                        <strong>Notes:</strong>
+                        <p id="modalNotes"></p>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button id="editPersonBtn" class="btn btn-primary">Edit</button>
+                    <button id="addChildToPersonBtn" class="btn btn-secondary">+ Add Child</button>
+                    <button id="addSpouseBtn" class="btn btn-secondary">+ Add Spouse</button>
                 </div>
             </div>
         </div>
-    </section>
-
-    <section id="timeline" class="timeline-section">
-        <div class="container">
-            <h2 class="section-title">50 YEARS OF EVOLUTION</h2>
-            <div class="timeline">
-                <div class="timeline-item" data-year="1964">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3>1964-1966</h3>
-                        <h4>First Generation</h4>
-                        <p>The original Mustang debuts with a long hood and short deck design. Available as a coupe or convertible, it featured the iconic running horse emblem and became an instant classic.</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item" data-year="1967">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3>1967-1973</h3>
-                        <h4>Growing Muscle</h4>
-                        <p>The Mustang grows larger and more powerful. The legendary Shelby GT500 and Boss 429 models are born, becoming some of the most sought-after muscle cars in history.</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item" data-year="1974">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3>1974-1978</h3>
-                        <h4>Mustang II</h4>
-                        <p>Responding to the oil crisis, Ford introduces a smaller, more fuel-efficient Mustang. Despite criticism, it kept the nameplate alive during challenging times.</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item" data-year="1979">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3>1979-1993</h3>
-                        <h4>Fox Body Era</h4>
-                        <p>The Fox platform brings back performance with the 5.0 V8. The Mustang GT becomes a performance bargain and dominates street racing culture.</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item" data-year="1994">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3>1994-2004</h3>
-                        <h4>The SN95/New Edge</h4>
-                        <p>A modern redesign brings flowing curves and the return of the legendary Cobra nameplate. The Mustang maintains its position as America's favorite sports car.</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item" data-year="2005">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3>2005-2014</h3>
-                        <h4>Retro Revolution</h4>
-                        <p>Ford looks to the past for inspiration, creating a modern Mustang with classic styling cues. The supercharged GT500 produces over 662 horsepower.</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item highlight" data-year="2014">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3>2014</h3>
-                        <h4>50th Anniversary</h4>
-                        <p>Ford celebrates 50 years of the Mustang with special edition models and unveils the all-new sixth generation for 2015, featuring independent rear suspension and global availability.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="gallery" class="gallery-section">
-        <div class="container">
-            <h2 class="section-title">ICONIC MOMENTS</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <div class="gallery-placeholder" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
-                        <span>1964 Mustang Debut</span>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <div class="gallery-placeholder" style="background: linear-gradient(135deg, #c31432 0%, #240b36 100%);">
-                        <span>1967 Shelby GT500</span>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <div class="gallery-placeholder" style="background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);">
-                        <span>1969 Boss 429</span>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <div class="gallery-placeholder" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);">
-                        <span>1993 Cobra R</span>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <div class="gallery-placeholder" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        <span>2007 Shelby GT500</span>
-                    </div>
-                </div>
-                <div class="gallery-item">
-                    <div class="gallery-placeholder" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                        <span>2014 Anniversary Edition</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="legacy" class="legacy-section">
-        <div class="container">
-            <h2 class="section-title">THE LEGACY CONTINUES</h2>
-            <div class="legacy-content">
-                <div class="legacy-card">
-                    <div class="legacy-icon">&#127909;</div>
-                    <h3>Silver Screen Star</h3>
-                    <p>From "Bullitt" to "Gone in 60 Seconds," the Mustang has starred in over 500 movies, becoming Hollywood's favorite car.</p>
-                </div>
-
-                <div class="legacy-card">
-                    <div class="legacy-icon">&#127942;</div>
-                    <h3>Racing Heritage</h3>
-                    <p>Mustang has dominated tracks worldwide, from Trans-Am championships to modern NASCAR victories.</p>
-                </div>
-
-                <div class="legacy-card">
-                    <div class="legacy-icon">&#128100;</div>
-                    <h3>Community</h3>
-                    <p>Millions of enthusiasts worldwide belong to Mustang clubs, keeping the passion alive across generations.</p>
-                </div>
-
-                <div class="legacy-card">
-                    <div class="legacy-icon">&#128640;</div>
-                    <h3>Innovation</h3>
-                    <p>From EcoBoost engines to modern technology, Mustang continues to evolve while staying true to its roots.</p>
-                </div>
-            </div>
-
-            <div class="anniversary-message">
-                <h3>Here's to 50 More Years</h3>
-                <p>The Ford Mustang isn't just a car—it's a symbol of American ingenuity, freedom, and the open road. As we celebrate 50 years of this automotive icon, we look forward to the adventures that lie ahead. The legend continues.</p>
-                <div class="signature">— The Mustang Family</div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>MUSTANG 50</h4>
-                    <p>Celebrating five decades of American muscle and freedom on four wheels.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#history">History</a></li>
-                        <li><a href="#timeline">Timeline</a></li>
-                        <li><a href="#gallery">Gallery</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Legacy</h4>
-                    <p>1964 - 2014<br>50 Years of Innovation<br>Millions of Miles<br>One Legend</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2014 Ford Mustang 50th Anniversary Tribute. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    </div>
 
     <script src="script.js"></script>
 </body>
