@@ -1,0 +1,25 @@
+# Google Calendar credentials
+credentials.json
+token.json
+
+# Environment variables
+.env
+
+# Scraped data and outputs
+extracted-events.json
+events-to-sync.json
+scraped-data.json
+page-content.html
+planning-app-screenshot.png
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
